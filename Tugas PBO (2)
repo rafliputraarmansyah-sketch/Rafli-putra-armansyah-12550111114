@@ -1,0 +1,112 @@
+#====================================**Tugas PBO 2**===================================
+
+from datetime import date
+#=================================== CLASS BOOK ===================================
+class Book:
+    def __init__(self, title, author, isbn):
+        if not title or not isbn:
+            raise ValueError("Book title and ISBN cannot be empty!")
+
+        self.title = title
+        self.author = author
+        self.isbn = isbn
+        self.is_borrowed = False
+
+    def borrow(self):
+        if self.is_borrowed:
+            raise ValueError(f"Buku '{self.title}' sedang dipinjam.")
+        self.is_borrowed = True
+
+    def return_book(self):
+        if not self.is_borrowed:
+            raise ValueError(f"Buku '{self.title}' tidak sedang dipinjam.")
+        self.is_borrowed = False
+
+#=================================== CLASS MEMBER ===================================
+class Member:
+    def __init__(self, name, member_id):
+        if not name or not member_id:
+            raise ValueError("Name and Member ID cannot be empty!")
+        self.name = name
+        self.member_id = member_id
+        self.borrowed_books: list[BorrowTransaction] = []
+
+#=================================== CLASS STAFF ===================================
+class Staff:
+    def __init__(self, name, staff_id):
+        if not name or not staff_id:
+            raise ValueError ("Staff and staff ID cannot be empty!")
+        self.name = name
+        self.staff_id = staff_id
+
+
+#=================================== CLASS TRANSAKSI PEMINJAMAN ===================================
+class BorrowTransaction:
+    def __init__(self, book: Book, member: Member, staff: Staff):
+        if not isinstance(book, Book):
+            raise TypeError("Input 'book' tidak ada di data dari Book!")
+        if not isinstance(member, Member):
+            raise TypeError("Input 'member' tidak ada di data dari Member")
+        if not isinstance(staff, Staff):
+            raise TypeError("Input 'staff' tidak ada di data Staff")
+
+        self.book = book
+        self.member = member
+        self.staff = staff
+        self.borrow_date = str(date.today())
+        self.returned = False
+
+    def borrow_book(self, book: Book, staff: Staff):
+        try:
+            book.borrow()
+            self.returned = False
+            self.member.borrowed_books.append(self)
+            print(f"SUKSES: '{book.title}' dipinjam oleh {self.member.name} (Petugas: {staff.name})")
+        except ValueError as e:
+            print(f"GAGAL PINJAM: {e}")
+
+    def return_book(self, book: Book, staff: Staff):
+        try:
+            book.return_book()
+            self.returned = True
+            print(f"SUKSES: '{book.title}' telah dikembalikan (Petugas: {staff.name})")
+        except ValueError as e:
+            print(f"GAGAL KEMBALI: {e}")
+
+# =================================== KODE PENGUJIAN ===================================
+if __name__ == "__main__":
+    try:
+        buku1 = Book("Harry Potter", "J.K. Rowling", "12345")
+        buku2 = Book("Python Basics", "John Doe", "67890")
+        member1 = Member("Andi", "M001")
+        staff1 = Staff("Budi", "S001")
+
+        print(f"Buku Tersedia: {buku1.title} dan {buku2.title}")
+        print(f"Member: {member1.name} | Staff: {staff1.name}\n")
+
+        # 2. Test Transaksi Peminjaman
+        print("--- Test 1: Peminjaman ---")
+        transaksi1 = BorrowTransaction(buku1, member1, staff1)
+        transaksi1.borrow_book(buku1, staff1)
+
+        # 3. Test Peminjaman Buku yang Sama 
+        print("\n--- Test 2: Pinjam Buku yang Sedang Dipinjam ---")
+        transaksi2 = BorrowTransaction(buku1, member1, staff1)
+        transaksi2.borrow_book(buku1, staff1)
+
+        # 4. Test Pengembalian
+        print("\n--- Test 3: Pengembalian Normal ---")
+        transaksi1.return_book(buku1, staff1)
+
+        # 5. Test Pengembalian Buku yang Sudah Kembali (
+        print("\n--- Test 4: Kembali Buku yang Sudah Ada di Rak ---")
+        transaksi1.return_book(buku1, staff1)
+
+        # 6. Test Validasi Input Kosong (Error Handling)
+        print("\n--- Test 5: Validasi Input Kosong ---")
+        buku_error = Book("", "", "") 
+
+    except ValueError as e:
+        print(f"ERROR: {e}")
+    except Exception as e:
+        print(f"TERJADI ERROR LAIN: {e}")
