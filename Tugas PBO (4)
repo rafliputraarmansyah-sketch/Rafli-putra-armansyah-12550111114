@@ -1,7 +1,7 @@
-
 #===========================================Class Vehicle===========================================
 class Vehicle:
     def __init__(self, brand, model):
+        # Validasi: Brand dan Model tidak boleh kosong
         if not brand or brand.strip() == "":
             raise ValueError("Brand cannot be empty")
         if not model or model.strip() == "":
@@ -10,37 +10,43 @@ class Vehicle:
         self.model = model
 
     def drive(self):
+        # Menampilkan pesan mengemudi
         print(f"The {self.brand} {self.model} is driving.")
 
 #===========================================Class Car===========================================
 class Car(Vehicle):
     def __init__(self, brand, model, doors):
+        # Ambil atribut brand & model dari parent (Vehicle)
         super().__init__(brand, model)
+        # Validasi: Jumlah pintu harus 1-6
         if doors <= 0:
             raise ValueError("The number of doors must be greater than 0!")
-        elif doors > 6: #6 ini hanya untuk contoh maksimal dari jumlah pintu yang masuk akal
-            raise ValueError(f"The number of doors ({doors}) is unrealistic for a standard car!")
+        elif doors > 6: 
+            raise ValueError(f"The number of doors ({doors}) is unrealistic!")
         self.doors = doors
     
     def honk(self):
+        # Suara klakson mobil
         print("Beep! Beep!")
 
 #===========================================Class Truck===========================================
 class Truck(Vehicle):
     def __init__(self, brand, model, load_capacity):
         super().__init__(brand, model)
+        # Validasi: Kapasitas harus positif
         if load_capacity <= 0:
             raise ValueError("The number of load capacity must be greater than 0!")
         self.load_capacity = load_capacity
 
     def load(self, weight):
+        # Cek apakah muatan melebihi kapasitas
         if weight > self.load_capacity:
-            raise ValueError(f"Overload! Capacity is {self.load_capacity} kg, but loaded {weight} kg.")
+            raise ValueError(f"Overload! Capacity is {self.load_capacity} kg.")
         print(f"Loaded {weight} kg.")
-
 
 def main():
     try:
+        # Membuat objek mobil dan truk
         my_car = Car("Toyota", "Corolla", 4)
         my_truck = Truck("Ford", "F-150", 1000)
 
@@ -48,8 +54,11 @@ def main():
         my_car.honk()
 
         my_truck.drive()
-        my_truck.load(1200) #error gk masuk akal 1200 kg
+        # Simulasi muatan berlebih (1200kg > 1000kg)
+        my_truck.load(1200) 
+        
     except ValueError as e:
+        # Menangkap dan cetak pesan error
         print(f"Warning: {e}")
 
 if __name__ == "__main__":
