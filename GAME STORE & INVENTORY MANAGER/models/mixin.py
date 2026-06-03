@@ -12,28 +12,6 @@ class DiskonMixin:
         diskon = self.hitung_nilai_diskon(harga, persen)
         return harga - diskon
 
-class ValidasiMixin:
-    """Mixin untuk utilitas validasi input data."""
-
-    def cek_data_kosong(self, nilai: Any, field: str) -> None:
-        """Memastikan data yang diinput tidak kosong."""
-        if str(nilai).strip() == "":
-            raise ValueError(f"{field} tidak boleh kosong")
-
-    def cek_nilai_positif(self, nilai: Union[int, float], field: str) -> None:
-        """Memastikan angka yang dimasukkan tidak negatif."""
-        if nilai < 0:
-            raise ValueError(f"{field} harus positif")
-
-    def cek_huruf(self, teks: str, field: str) -> None:
-        """Memastikan input teks minimal mengandung huruf."""
-        if not any(x.isalpha() for x in str(teks)):
-            raise ValueError(f"{field} harus teks")
-
-    def cek_angka(self, nilai: Any, field: str) -> None:
-        """Memastikan input murni berupa digit angka."""
-        if not str(nilai).isdigit():
-            raise ValueError(f"{field} harus angka murni")
 
 class PajakMixin:
     """Mixin tambahan untuk kalkulasi finansial seperti Pajak (PPN), Keuntungan, dan Format Uang."""
