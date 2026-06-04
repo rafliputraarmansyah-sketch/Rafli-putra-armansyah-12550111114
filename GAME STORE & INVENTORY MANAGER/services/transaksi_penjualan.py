@@ -57,7 +57,7 @@ class TransaksiPenjualan(PajakMixin):
             return
 
         print("\n====================================================")
-        print("             STRUK PEMBELIAN TOKO GAME              ")
+        print("            STRUK PEMBELIAN TOKO GAME               ")
         print(f"Tanggal: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print("====================================================")
 
@@ -76,7 +76,7 @@ class TransaksiPenjualan(PajakMixin):
         
         # Kalkulasi pajak menggunakan method dari PajakMixin
         ppn = self.hitung_ppn(total_belanja)
-        total_akhir = self.hitung_harga_dengan_ppn(total_belanja)
+        total_akhir = self.hitung_harga_jual_dengan_ppn(total_belanja) 
 
         print(f"Total Subtotal : Rp {total_belanja:,}")
         print(f"PPN (11%)      : Rp {int(ppn):,}")

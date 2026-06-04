@@ -14,6 +14,7 @@ from models.apparel_game import ApparelGame
 
 from services.inventory_manager import InventoryManager
 from services.laporan_stok import LaporanStok
+from services.transaksi_penjualan import TransaksiPenjualan # <--- DITAMBAHKAN IMPORT KASIR
 
 init(autoreset=True)
 
@@ -77,6 +78,7 @@ input(Fore.YELLOW + "Tekan Enter untuk masuk ke Menu Utama...")
 # ==========================================
 manager = InventoryManager()
 laporan = LaporanStok(manager)
+kasir = TransaksiPenjualan(manager)  # <--- DITAMBAHKAN INISIALISASI KASIR
 
 # Rekonstruksi data mentah JSON ke bentuk Objek Class agar bisa masuk ke daftar_barang
 data_mentah = manager.muat_data()
@@ -160,6 +162,7 @@ while True:
 ║ 4. Cari Barang                       ║
 ║ 5. Tampilkan Semua                   ║
 ║ 6. Laporan Stok                      ║
+║ 7. Transaksi Kasir                   ║
 ║ 0. Keluar                            ║
 ╚══════════════════════════════════════╝
 """)
@@ -321,7 +324,7 @@ while True:
             bersihkan_layar()
             print("""
 ╔══════════════════════════════════════╗
-║         📊 SELEKSI LAPORAN STOK      ║
+║        📊 SELEKSI LAPORAN STOK       ║
 ╠══════════════════════════════════════╣
 ║ 1. Laporan Barang Habis (Stok 0)     ║
 ║ 2. Laporan Barang Menipis            ║
@@ -347,6 +350,38 @@ while True:
                 break
             else:
                 print(Fore.RED + "\nMenu laporan tidak valid.\n")
+                input(Fore.YELLOW + "Tekan Enter untuk mencoba lagi...")
+
+    # ======================================
+    # 7. TRANSAKSI KASIR (TAMBAHAN BARU)
+    # ======================================
+    elif pilihan == "7":
+        while True:
+            bersihkan_layar()
+            print(Fore.YELLOW + "\n--- 🛒 MESIN KASIR ---")
+            print("1. Tambah Barang ke Keranjang")
+            print("2. Cetak Struk dan Bayar")
+            print("0. Batal / Kembali")
+            
+            opsi_kasir = input("Pilih opsi : ").strip()
+            
+            if opsi_kasir == "1":
+                kode_beli = input_kode()
+                jumlah_beli = input_angka("Jumlah Beli : ")
+                kasir.tambah_ke_keranjang(kode_beli, jumlah_beli)
+                input(Fore.YELLOW + "Tekan Enter untuk melanjutkan...")
+            
+            elif opsi_kasir == "2":
+                kasir.cetak_struk()
+                input(Fore.YELLOW + "Tekan Enter untuk menyelesaikan transaksi...")
+                break # Keluar dari menu kasir setelah cetak struk
+                
+            elif opsi_kasir == "0":
+                print(Fore.RED + "\n[INFO] Transaksi dibatalkan.")
+                break
+            
+            else:
+                print(Fore.RED + "\nOpsi tidak valid.")
                 input(Fore.YELLOW + "Tekan Enter untuk mencoba lagi...")
 
     # ======================================
